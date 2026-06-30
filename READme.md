@@ -15,7 +15,24 @@ This repository contains a complete, production-style data engineering and analy
 
 ## 🔗 Quick Links
 
-- **Live Dashboard:** [add your Streamlit Cloud URL here once deployed]
+- **Live Dashboard:** - 
+
+## 📸 Dashboard Screenshots
+
+**Market Overview**
+![Market Overview](dashboard/images/1.png)
+
+**Geographic Analysis**
+![Geographic Analysis](dashboard/images/2.png)
+
+**Host Intelligence**
+![Host Intelligence](dashboard/images/3.png)
+
+**Temporal Trends**
+![Temporal Trends](dashboard/images/4.png)
+
+**Pricing Intelligence**
+![Pricing Intelligence](dashboard/images/5.png)
 
 ---
 
