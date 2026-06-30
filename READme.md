@@ -2,7 +2,6 @@
 ### A Comparative Data Engineering & Analytics Study — Bangkok & Lisbon
 
 ---
-
 ## Overview
 
 This repository contains a complete, production-style data engineering and analytics system built on Inside Airbnb data for two cities: Bangkok, Thailand and Lisbon, Portugal. The project spans the full data lifecycle — ingestion, profiling, cleaning, enrichment, dimensional modelling, statistical analysis, and interactive visualisation — orchestrated through a single configurable pipeline that can be run manually or via Apache Airflow.
@@ -86,7 +85,7 @@ airbnb-market-analytics-system/
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Imasha-Samarasinghe/Airbnb-Market-Analytics-System
 cd airbnb-market-analytics-system
 ```
 
@@ -244,3 +243,19 @@ jupyter notebook notebooks/eda_bangkok_lisbon.ipynb
 
 The notebook connects directly to PostgreSQL and contains the full EDA and statistical analysis code referenced in the final report, including all hypothesis tests, the correlation matrix, and OLS regression.
 
+---
+
+## ✅ What Was Completed
+
+- Full multi-city, configurable ingestion and profiling pipeline
+- Data cleaning with city-specific handling of currency, coordinates, and schema differences between Bangkok and Lisbon
+- 8-table star schema (5 dimensions, 3 facts) loaded into PostgreSQL, ~21 million rows total
+- Complete EDA covering distributions, geography, temporal trends, host analysis, and review patterns
+- 5 hypothesis tests with non-parametric methods, effect sizes, and OLS regression with VIF diagnostics
+- Interactive 5-tab Streamlit dashboard with live PostgreSQL querying and cross-filtering
+- Apache Airflow DAG for pipeline orchestration
+- Full Docker containerisation
+
+## ⏭ What Was Not Completed
+
+Sections 06 (Data Science/ML) and 07 (AI/ML Opportunities) of the assessment were deliberately not attempted, in favour of achieving depth across the data engineering and analytical sections. Rationale is documented in the report's Objectives & Scope and Limitations sections.

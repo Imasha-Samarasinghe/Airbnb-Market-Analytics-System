@@ -11,3 +11,7 @@ airflow/logs/
 
 notebooks/.ipynb_checkpoints/
 **/.ipynb_checkpoints/
+
+airbnb_backup.sql
+
+airbnb_backup_fixed.sql
