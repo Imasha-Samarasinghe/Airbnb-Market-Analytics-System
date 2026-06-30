@@ -29,10 +29,10 @@ This repository contains a complete, production-style data engineering and analy
 ![Host Intelligence](dashboards/images/3.png)
 
 **Temporal Trends**
-![Temporal Trends](dashboars/images/4.png)
+![Temporal Trends](dashboards/images/4.png)
 
 **Pricing Intelligence**
-![Pricing Intelligence](dashboars/images/5.png)
+![Pricing Intelligence](dashboards/images/5.png)
 
 ---
 
