@@ -1,0 +1,180 @@
+
+version: "3.8"
+
+# =============================================================================
+# COMMON AIRFLOW CONFIG
+# =============================================================================
+
+x-airflow-common: &airflow-common
+  build:
+    context: ./airflow
+    dockerfile: Dockerfile
+
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@postgres:5432/airflow_meta
+    AIRFLOW__CORE__FERNET_KEY: "46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLt0nfdstY="
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+
+    # Project DB connection
+    DB_HOST: postgres
+    DB_PORT: 5432
+    DB_NAME: airbnb_analytics
+    DB_USER: postgres
+    DB_PASSWORD: postgres
+
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - .:/opt/airflow/project
+
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+  networks:
+    - airbnb_network
+
+
+# =============================================================================
+# SERVICES
+# =============================================================================
+
+services:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PostgreSQL
+  # ────────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: airbnb_postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: airbnb_analytics
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - airbnb_postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - airbnb_network
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # pgAdmin
+  # ────────────────────────────────────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: airbnb_pgadmin
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - "5050:80"
+
+    depends_on:
+      - postgres
+
+    networks:
+      - airbnb_network
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Airflow Init
+  # ────────────────────────────────────────────────────────────────────────────
+  airflow-init:
+    <<: *airflow-common
+
+    container_name: airflow_init
+
+    entrypoint: /bin/bash
+
+    command:
+      - -c
+      - |
+        PGPASSWORD=postgres psql -h postgres -U postgres -tc \
+          "SELECT 1 FROM pg_database WHERE datname='airflow_meta'" | \
+          grep -q 1 || \
+          PGPASSWORD=postgres psql -h postgres -U postgres \
+          -c "CREATE DATABASE airflow_meta;"
+
+        airflow db migrate
+
+        airflow users create \
+          --username admin \
+          --password admin \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com || true
+
+    restart: "no"
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Airflow Webserver
+  # ────────────────────────────────────────────────────────────────────────────
+  airflow-webserver:
+    <<: *airflow-common
+
+    container_name: airflow_webserver
+
+    command: webserver
+
+    ports:
+      - "8080:8080"
+
+    restart: unless-stopped
+
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Airflow Scheduler
+  # ────────────────────────────────────────────────────────────────────────────
+  airflow-scheduler:
+    <<: *airflow-common
+
+    container_name: airflow_scheduler
+
+    command: scheduler
+
+    restart: unless-stopped
+
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+
+volumes:
+  airbnb_postgres_data:
+
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+
+networks:
+  airbnb_network:
+    driver: bridge
+
