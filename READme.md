@@ -20,19 +20,19 @@ This repository contains a complete, production-style data engineering and analy
 ## 📸 Dashboard Screenshots
 
 **Market Overview**
-![Market Overview](dashboard/images/1.png)
+![Market Overview](dashboards/images/1.png)
 
 **Geographic Analysis**
-![Geographic Analysis](dashboard/images/2.png)
+![Geographic Analysis](dashboards/images/2.png)
 
 **Host Intelligence**
-![Host Intelligence](dashboard/images/3.png)
+![Host Intelligence](dashboards/images/3.png)
 
 **Temporal Trends**
-![Temporal Trends](dashboard/images/4.png)
+![Temporal Trends](dashboars/images/4.png)
 
 **Pricing Intelligence**
-![Pricing Intelligence](dashboard/images/5.png)
+![Pricing Intelligence](dashboars/images/5.png)
 
 ---
 
