@@ -1,0 +1,5 @@
+*.ipynb linguist-detectable=false
+*.pdf linguist-detectable=false
+*.html linguist-detectable=false
+reports/* linguist-detectable=false
+notebooks/* linguist-documentation=true
